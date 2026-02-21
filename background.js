@@ -1,43 +1,61 @@
 // background.js
 import { generateAISuggestion } from './services/ai_agent.js';
-import { DriveManager } from './services/drive_manager.js';
+import { WorkspaceManager } from './services/workspace_manager.js';
+import { saveCarbonMetrics, saveFeedback } from './services/firebase_manager.js';
 
-// Standard V3 Listener: Cannot be async directly
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "START_ECO_AUDIT") {
-    // Run the async logic in a separate self-invoking function
-    handleAudit(sendResponse);
-    return true; // Crucial: Keeps the message channel open for async response
+  if (message.type === "SCAN_WORKSPACE") {
+    handleWorkspaceScan(message.target, sendResponse);
+    return true; // Keeps async channel open
+  }
+  
+  if (message.type === "USER_FEEDBACK") {
+    saveFeedback(message.payload).then(() => sendResponse({ success: true }));
+    return true;
   }
 });
 
-async function handleAudit(sendResponse) {
+async function handleWorkspaceScan(target, sendResponse) {
   try {
-    const token = await DriveManager.getAuthToken();
-    const driveData = await DriveManager.fetchFiles(token);
+    const token = await WorkspaceManager.getAuthToken();
+    let data = [];
+    let role = "";
     
-    // Send real Drive metadata to Gemini
-    const aiAnalysis = await generateAISuggestion('Drive Storage Optimizer', driveData.files);
+    // Route to the correct Google API
+    if (target === "DRIVE") {
+        const driveData = await WorkspaceManager.fetchDriveFiles(token);
+        data = driveData.files;
+        role = "Drive Storage Optimizer";
+    } else if (target === "CALENDAR") {
+        const calendarData = await WorkspaceManager.fetchCalendarEvents(token);
+        data = calendarData.items;
+        role = "Mobility Optimizer";
+    }
+
+    // Pass live data to Gemini AI
+    const aiAnalysis = await generateAISuggestion(role, data);
     
-    // Save to Google Drive (Persistence)
-    await DriveManager.saveMetricsToDrive(token, {
-      lastAudit: new Date().toISOString(),
-      analysis: aiAnalysis,
-      totalCarbonSaved: aiAnalysis.carbonSaved
+    // Save longitudinal metrics to Firestore
+    await saveCarbonMetrics({
+      source: target,
+      carbonSaved: aiAnalysis.carbonSaved,
+      suggestion: aiAnalysis.suggestion,
+      timestamp: new Date().toISOString()
     });
 
-    // Save to local storage for immediate Popup UI access
+    // Save strictly to local storage for immediate UI rendering
     await chrome.storage.local.set({
       totalCarbon: aiAnalysis.carbonSaved,
-      lastSuggestion: aiAnalysis.suggestion
+      lastSuggestion: aiAnalysis.suggestion,
+      lastItemsTargeted: aiAnalysis.itemsTargeted || 0
     });
 
-    // Notify UI that we are done
-    chrome.runtime.sendMessage({ type: "AUDIT_COMPLETE", data: aiAnalysis });
+    // Notify the UI
+    chrome.runtime.sendMessage({ type: "ANALYSIS_COMPLETE", data: aiAnalysis });
     if (sendResponse) sendResponse({ success: true });
 
   } catch (error) {
-    console.error("Audit Failed:", error);
-    chrome.runtime.sendMessage({ type: "AUDIT_ERROR", error: error.message });
+    console.error("Scan Failed:", error);
+    chrome.runtime.sendMessage({ type: "ANALYSIS_ERROR", error: error.message });
   }
 }

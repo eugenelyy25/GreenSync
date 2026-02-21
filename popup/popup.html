@@ -6,21 +6,32 @@
 </head>
 <body>
   <div class="dashboard">
-    <h2>GreenSync Metrics</h2>
-    <div class="stat-card">
-      <span id="carbon-value">0</span>kg 
-      <p>Carbon Offset</p>
+    <h2>GreenSync Impact</h2>
+    <div class="metrics-container" style="display: flex; justify-content: space-around;">
+      <div class="stat-card">
+        <span id="carbon-value">0</span>kg 
+        <p>Carbon Offset</p>
+      </div>
+      <div class="stat-card">
+        <span id="items-value">0</span> 
+        <p>Items Optimized</p>
+      </div>
     </div>
     
-    <div id="ai-suggestion-box">
-      <h4>AI Eco-Suggestion:</h4>
-      <p id="suggestion-text">Scanning for impact...</p>
+    <div class="action-buttons">
+      <button id="btn-scan-drive" class="main-action-btn">Scan Live Drive</button>
+      <button id="btn-scan-calendar" class="main-action-btn" style="background-color: #1565c0;">Scan Live Calendar</button>
     </div>
 
-    <div class="feedback-module">
-      <p>Was this helpful?</p>
-      <button onclick="saveFeedback(true)">Yes</button>
-      <button onclick="saveFeedback(false)">No</button>
+    <div id="ai-suggestion-box">
+      <h4>AI Eco-Suggestion:</h4>
+      <p id="suggestion-text">Click a button above to scan your live footprint.</p>
+    </div>
+
+    <div class="feedback-module" id="feedback-ui" style="display:none; margin-top: 15px;">
+      <p style="margin-bottom: 5px;">Was this suggestion helpful?</p>
+      <button id="btn-yes" style="background-color: #2e7d32; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">Yes</button>
+      <button id="btn-no" style="background-color: #d32f2f; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">No</button>
     </div>
   </div>
   <script src="popup.js"></script>
