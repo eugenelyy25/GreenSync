@@ -1,0 +1,6 @@
+# Ignore API keys and local config
+services/config.js
+
+# Ignore system files
+.DS_Store
+node_modules/

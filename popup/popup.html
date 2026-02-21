@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h2>GreenSync Metrics</h2>
+    <div class="stat-card">
+      <span id="carbon-value">0</span>kg 
+      <p>Carbon Offset</p>
+    </div>
+    
+    <div id="ai-suggestion-box">
+      <h4>AI Eco-Suggestion:</h4>
+      <p id="suggestion-text">Scanning for impact...</p>
+    </div>
+
+    <div class="feedback-module">
+      <p>Was this helpful?</p>
+      <button onclick="saveFeedback(true)">Yes</button>
+      <button onclick="saveFeedback(false)">No</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+/* popup/popup.css */
+:root {
+  --primary-green: #2e7d32;
+  --light-green: #e8f5e9;
+  --accent-gold: #ffd700;
+  --text-dark: #1b5e20;
+}
+
+body {
+  width: 320px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: var(--light-green);
+  color: var(--text-dark);
+}
+
+.dashboard {
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-bottom: 4px solid var(--primary-green);
+}
+
+#carbon-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--primary-green);
+}
+
+#ai-suggestion-box {
+  background: #fff;
+  border-left: 4px solid var(--accent-gold);
+  padding: 10px;
+  text-align: left;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Updated Button Styles for Better UX */
+.main-action-btn {
+  background-color: var(--primary-green);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  width: 100%;
+  margin-top: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.main-action-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.main-action-btn:disabled {
+  background-color: #a5d6a7;
+  cursor: wait;
+}
+
+.feedback-module button {
+  background-color: var(--primary-green);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}

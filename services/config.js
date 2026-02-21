@@ -1,0 +1,2 @@
+export const GEMINI_API_KEY = "AIzaSyCmds02dHSEjsveKJ7tfyw1zTXSq9zAJEY";
+export const CLIENT_ID = "517644593564-usngaafg34hr9iuq6v18thejpkt6gqe0.apps.googleusercontent.com"; // From your OAuth Client ID screens
